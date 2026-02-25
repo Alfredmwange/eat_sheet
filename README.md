@@ -1,16 +1,90 @@
-# eat_sheet
+# Eat Sheet
 
-A new Flutter project.
+A Flutter application for managing and sharing meal planning and grocery lists.
+
+## Project Structure
+
+```
+lib/
+├── screens/
+│   └── splash_screen.dart    # Initial splash screen
+assets/
+├── fonts/                     # Custom font files
+└── images/                    # App images and icons
+android/                       # Android-specific configuration
+ios/                           # iOS-specific configuration
+web/                           # Web platform files
+windows/                       # Windows platform files
+linux/                         # Linux platform files
+macos/                         # macOS platform files
+test/                          # Unit and widget tests
+```
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+### Prerequisites
 
-A few resources to get you started if this is your first Flutter project:
+- Flutter SDK (latest stable version)
+- Dart 3.0+
+- Android Studio or Xcode (for mobile development)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### Installation
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd eat_sheet
+```
+
+2. Install dependencies:
+```bash
+flutter pub get
+```
+
+3. Run the app:
+```bash
+flutter run
+```
+
+## Features
+
+- Meal planning interface
+- Grocery list management
+
+
+## Development
+
+### Running Tests
+
+```bash
+flutter test
+```
+
+### Building for Production
+
+**Android:**
+```bash
+flutter build apk
+```
+
+**iOS:**
+```bash
+flutter build ios
+```
+
+**Web:**
+```bash
+flutter build web
+```
+
+## Database
+
+This project uses [Firestore](https://firebase.google.com/docs/firestore) for data storage and synchronization.
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+## License
+
+[Your License Here]
