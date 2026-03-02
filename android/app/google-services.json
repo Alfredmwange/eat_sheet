@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "215509420809",
+    "project_id": "eat-sheet-dbdbb",
+    "storage_bucket": "eat-sheet-dbdbb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:215509420809:android:15b5aa8f21b68d351ba1d8",
+        "android_client_info": {
+          "package_name": "com.alfredmwange.eat_sheet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3Zjq8k9hr-oAvn1r9OBNu8k1VjWMuKOk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
