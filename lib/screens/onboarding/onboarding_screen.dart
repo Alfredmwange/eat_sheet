@@ -22,7 +22,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     OnboardingPage(
       icon: Icons.restaurant_menu,
       title: 'Local Foods Support',
-      description: 'Comprehensive database of Kenyan foods with accurate nutrition data.',
+      description: 'Comprehensive and accurate nutrition data.',
       color: Colors.green.shade400,
     ),
     OnboardingPage(

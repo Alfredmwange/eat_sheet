@@ -1,4 +1,6 @@
 import 'package:eat_sheet/helpers/shared_preferences_helper.dart';
+import 'package:eat_sheet/models/user_model.dart';
+import 'package:eat_sheet/services/auth.dart';
 import 'package:flutter/material.dart';
 
 class Register extends StatefulWidget {
@@ -9,6 +11,8 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  final AuthService _authService = AuthService();
+
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -26,10 +30,69 @@ class _RegisterState extends State<Register> {
     super.dispose();
   }
 
-  void _handleRegister() async {
-    // TODO: Implement registration logic with Firebase
-    // After successful registration, call:
-    await SharedPreferencesHelper.setFirstTimeComplete();
+  Future<void> _handleRegister() async {
+    final name = _nameController.text.trim();
+    final email = _emailController.text.trim();
+    final pass = _passwordController.text;
+    final confirm = _confirmPasswordController.text;
+
+    if (name.isEmpty || email.isEmpty || pass.isEmpty || confirm.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill in all fields')),
+      );
+      return;
+    }
+
+    if (pass != confirm) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Passwords do not match')));
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    final user = await _authService.register(email, pass);
+
+    if (user != null) {
+      // update display name
+      await user.updateDisplayName(name);
+      await user.reload();
+      final updated = _authService.currentUser;
+
+      // save minimal profile locally
+      final appUser = User(
+        id: updated?.uid ?? '',
+        name: name,
+        email: email,
+        age: 0,
+        weight: 0,
+        height: 0,
+        activityLevel: '',
+        dietaryGoals: {},
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+      await SharedPreferencesHelper.setUserData(appUser);
+
+      await SharedPreferencesHelper.setFirstTimeComplete();
+
+      if (mounted) {
+        Navigator.of(context).pushReplacementNamed('/dashboard');
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Registration failed – please try again')),
+      );
+    }
+
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -40,10 +103,7 @@ class _RegisterState extends State<Register> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Colors.blue.shade400,
-              Colors.blue.shade600,
-            ],
+            colors: [Colors.blue.shade400, Colors.blue.shade600],
           ),
         ),
         child: SafeArea(
@@ -124,7 +184,9 @@ class _RegisterState extends State<Register> {
                       prefixIcon: const Icon(Icons.lock),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                          _obscurePassword
+                              ? Icons.visibility_off
+                              : Icons.visibility,
                         ),
                         onPressed: () {
                           setState(() {
@@ -154,7 +216,9 @@ class _RegisterState extends State<Register> {
                       prefixIcon: const Icon(Icons.lock),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _obscureConfirmPassword ? Icons.visibility_off : Icons.visibility,
+                          _obscureConfirmPassword
+                              ? Icons.visibility_off
+                              : Icons.visibility,
                         ),
                         onPressed: () {
                           setState(() {
@@ -193,7 +257,9 @@ class _RegisterState extends State<Register> {
                               height: 24,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.blue,
+                                ),
                               ),
                             )
                           : const Text(
@@ -213,9 +279,7 @@ class _RegisterState extends State<Register> {
                     children: [
                       const Text(
                         'Already have an account? ',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
+                        style: TextStyle(color: Colors.white),
                       ),
                       GestureDetector(
                         onTap: () => Navigator.of(context).pop(),

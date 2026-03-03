@@ -1,4 +1,4 @@
-package com.example.eat_sheet
+package com.alfredmwange.eat_sheet
 
 import io.flutter.embedding.android.FlutterActivity
 

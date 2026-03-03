@@ -1,3 +1,6 @@
+import 'package:eat_sheet/helpers/shared_preferences_helper.dart';
+import 'package:eat_sheet/models/user_model.dart';
+import 'package:eat_sheet/services/auth.dart';
 import 'package:flutter/material.dart';
 
 class Login extends StatefulWidget {
@@ -8,6 +11,8 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final AuthService _authService = AuthService();
+
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
@@ -20,31 +25,53 @@ class _LoginState extends State<Login> {
     super.dispose();
   }
 
-  void _handleLogin() {
-    // TODO: Implement login logic with Firebase
+  Future<void> _handleLogin() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
 
-      setState(() {
-        _isLoading = true;
-      });
-      //check if email and password are not empty
-      if(_emailController.text.isEmpty || _passwordController.text.isEmpty){
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please enter email and password')),
-        );
-        setState(() {
-          _isLoading = false;
-        });
-        return;
-      }
-      // Simulate a login delay
-      Future.delayed(const Duration(seconds: 5), () {
-        setState(() {
-          _isLoading = false;
-        });
-        // Navigate to home screen on successful login
-        if(!mounted) return;
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter email and password')),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    final user = await _authService.signIn(email, password);
+
+    if (user != null) {
+      // persist a minimal copy locally
+      final appUser = User(
+        id: user.uid,
+        name: user.displayName ?? '',
+        email: user.email ?? email,
+        age: 0,
+        weight: 0,
+        height: 0,
+        activityLevel: '',
+        dietaryGoals: {},
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+      await SharedPreferencesHelper.setUserData(appUser);
+
+      if (mounted) {
         Navigator.of(context).pushReplacementNamed('/dashboard');
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Login failed – check your credentials')),
+      );
+    }
+
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
       });
+    }
   }
 
   @override
@@ -55,10 +82,7 @@ class _LoginState extends State<Login> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Colors.blue.shade400,
-              Colors.blue.shade600,
-            ],
+            colors: [Colors.blue.shade400, Colors.blue.shade600],
           ),
         ),
         child: SafeArea(
@@ -80,18 +104,18 @@ class _LoginState extends State<Login> {
                             color: Colors.white,
                           ),
                           child: ClipOval(
-                      child: Image.asset(
-                        'assets/images/logo.png',
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Icon(
-                            Icons.restaurant,
-                            size: 70,
-                            color: Colors.blue.shade600,
-                          );
-                        },
-                      ),
-                    ),
+                            child: Image.asset(
+                              'assets/images/logo.png',
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Icon(
+                                  Icons.restaurant,
+                                  size: 70,
+                                  color: Colors.blue.shade600,
+                                );
+                              },
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 20),
                         const Text(
@@ -152,7 +176,9 @@ class _LoginState extends State<Login> {
                       prefixIcon: const Icon(Icons.lock),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                          _obscurePassword
+                              ? Icons.visibility_off
+                              : Icons.visibility,
                         ),
                         onPressed: () {
                           setState(() {
@@ -173,7 +199,6 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  
                   // Login Button
                   SizedBox(
                     width: double.infinity,
@@ -192,7 +217,9 @@ class _LoginState extends State<Login> {
                               height: 24,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.blue,
+                                ),
                               ),
                             )
                           : const Text(
@@ -212,9 +239,7 @@ class _LoginState extends State<Login> {
                     children: [
                       const Text(
                         "Don't have an account? ",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
+                        style: TextStyle(color: Colors.white),
                       ),
                       GestureDetector(
                         onTap: () {

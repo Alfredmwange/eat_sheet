@@ -407,7 +407,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Icon(
               Icons.arrow_forward_ios,
               size: 16,
-              color: color.withOpacity(0.5),
+              color: color.withOpacity(0.6),
             ),
           ],
         ),
