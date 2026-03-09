@@ -73,7 +73,7 @@ class _RegisterState extends State<Register> {
         activityLevel: '',
         dietaryGoals: {},
         createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
+        updatedAt: DateTime.now(), gender: '', goal: '', goalWeight: 0.0,
       );
       await SharedPreferencesHelper.setUserData(appUser);
 

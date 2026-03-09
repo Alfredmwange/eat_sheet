@@ -17,10 +17,12 @@ class AuthService {
   Future<User?> signIn(String email, String password) async {
     try {
       UserCredential result = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
+        email: email,
+        password: password,
+      );
       return result.user;
     } catch (e) {
-     print('Error signing in: $e');
+      print('Error signing in: $e');
       return null;
     }
   }
@@ -29,7 +31,9 @@ class AuthService {
   Future<User?> register(String email, String password) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
+        email: email,
+        password: password,
+      );
       return result.user;
     } catch (e) {
       print('Error registering: $e');
@@ -40,5 +44,16 @@ class AuthService {
   // Sign out
   Future<void> signOut() async {
     await _auth.signOut();
+  }
+
+  // Delete account
+  Future<bool> deleteAccount() async {
+    try {
+      await _auth.currentUser?.delete();
+      return true;
+    } catch (e) {
+      print('Error deleting account: $e');
+      return false;
+    }
   }
 }

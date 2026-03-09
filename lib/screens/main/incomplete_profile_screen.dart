@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 
 class IncompleteProfileScreen extends StatelessWidget {
-  final VoidCallback onCompleteProfile;
-
-  const IncompleteProfileScreen({
-    super.key,
-    required this.onCompleteProfile,
-  });
+  const IncompleteProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,11 +13,7 @@ class IncompleteProfileScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.person_add,
-                  size: 80,
-                  color: Colors.blue.shade400,
-                ),
+                Icon(Icons.person_add, size: 80, color: Colors.blue.shade400),
                 const SizedBox(height: 24),
                 const Text(
                   'Complete Your Profile',
@@ -47,7 +38,9 @@ class IncompleteProfileScreen extends StatelessWidget {
                   width: double.infinity,
                   height: 56,
                   child: ElevatedButton(
-                    onPressed: onCompleteProfile,
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/complete-profile');
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue.shade600,
                       shape: RoundedRectangleBorder(

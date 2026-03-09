@@ -17,12 +17,33 @@ class _LoginState extends State<Login> {
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
   bool _isLoading = false;
+  bool _rememberMe = false;
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSavedCredentials();
+  }
+
+  Future<void> _loadSavedCredentials() async {
+    final remember = await SharedPreferencesHelper.getRememberMe();
+    if (remember) {
+      final creds = await SharedPreferencesHelper.getSavedCredentials();
+      if (creds != null) {
+        _emailController.text = creds['email']!;
+        _passwordController.text = creds['password']!;
+      }
+    }
+    setState(() {
+      _rememberMe = remember;
+    });
   }
 
   Future<void> _handleLogin() async {
@@ -55,8 +76,18 @@ class _LoginState extends State<Login> {
         dietaryGoals: {},
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
+        gender: '',
+        goal: '', goalWeight: 0.0,
       );
       await SharedPreferencesHelper.setUserData(appUser);
+
+      // handle remember me
+      if (_rememberMe) {
+        await SharedPreferencesHelper.setRememberMe(true);
+        await SharedPreferencesHelper.saveCredentials(email, password);
+      } else {
+        await SharedPreferencesHelper.clearCredentials();
+      }
 
       if (mounted) {
         Navigator.of(context).pushReplacementNamed('/dashboard');
@@ -151,9 +182,11 @@ class _LoginState extends State<Login> {
                   TextField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
+                    style: const TextStyle(color: Colors.black),
                     decoration: InputDecoration(
                       hintText: 'Email Address',
-                      prefixIcon: const Icon(Icons.email),
+                      hintStyle: const TextStyle(color: Colors.grey),
+                      prefixIcon: const Icon(Icons.email, color: Colors.black),
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
@@ -171,14 +204,17 @@ class _LoginState extends State<Login> {
                   TextField(
                     controller: _passwordController,
                     obscureText: _obscurePassword,
+                    style: const TextStyle(color: Colors.black),
                     decoration: InputDecoration(
                       hintText: 'Password',
-                      prefixIcon: const Icon(Icons.lock),
+                      hintStyle: const TextStyle(color: Colors.grey),
+                      prefixIcon: const Icon(Icons.lock, color: Colors.black),
                       suffixIcon: IconButton(
                         icon: Icon(
                           _obscurePassword
                               ? Icons.visibility_off
                               : Icons.visibility,
+                          color: Colors.black,
                         ),
                         onPressed: () {
                           setState(() {
@@ -199,6 +235,26 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                   const SizedBox(height: 12),
+                  // Remember Me
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: _rememberMe,
+                        onChanged: (val) {
+                          setState(() {
+                            _rememberMe = val ?? false;
+                          });
+                        },
+                        activeColor: Colors.white,
+                        checkColor: Colors.blue,
+                      ),
+                      const SizedBox(width: 8),
+                      const Text(
+                        'Remember me',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
                   // Login Button
                   SizedBox(
                     width: double.infinity,

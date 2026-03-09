@@ -20,19 +20,16 @@ class DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
     _screens = [
-      const HomeScreen(),
-      const AnalyticsScreen(),
+      HomeScreen(
+        onMealTap: (meal) {
+          // placeholder callback, replace with real logic later
+          debugPrint('Meal tapped: $meal');
+        }, username: '',
+      ),
+      const WeightAnalyticsScreen(),
       const GoalsScreen(),
       const ProfileScreen(),
     ];
-
-    onTabChange = (index) {
-      if (mounted) {
-        setState(() {
-          _currentIndex = index;
-        });
-      }
-    };
   }
 
   @override
