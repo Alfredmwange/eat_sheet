@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:eat_sheet/models/user_model.dart';
 import 'package:eat_sheet/providers/user_provider.dart';
 import 'package:eat_sheet/services/auth.dart';
+import 'package:eat_sheet/helpers/nutrition_helper.dart';
 
 class CompleteProfileScreen extends StatefulWidget {
   const CompleteProfileScreen({super.key});
@@ -63,7 +64,14 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
         gender: _selectedGender,
         goal: _selectedGoal,
         activityLevel: _selectedActivityLevel,
-        dietaryGoals: {}, // Will be calculated later
+        dietaryGoals: _buildDietaryGoals(
+          age: int.parse(_ageController.text),
+          weight: double.parse(_weightController.text),
+          height: double.parse(_heightController.text),
+          gender: _selectedGender,
+          activityLevel: _selectedActivityLevel,
+          goal: _selectedGoal,
+        ),
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
@@ -92,6 +100,31 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
         setState(() => _isLoading = false);
       }
     }
+  }
+
+  Map<String, double> _buildDietaryGoals({
+    required int age,
+    required double weight,
+    required double height,
+    required String gender,
+    required String activityLevel,
+    required String goal,
+  }) {
+    final calories = NutritionHelper.dailyCalorieGoal(
+      weightKg: weight,
+      heightCm: height,
+      age: age,
+      gender: gender,
+      activityLevel: activityLevel,
+      goal: goal,
+    );
+    final macros = NutritionHelper.macroGoals(calories);
+    return {
+      'calories': calories.toDouble(),
+      'protein':  macros['protein']!.toDouble(),
+      'carbs':    macros['carbs']!.toDouble(),
+      'fat':      macros['fat']!.toDouble(),
+    };
   }
 
   void _showError(String message) {

@@ -14,18 +14,13 @@ class DashboardScreen extends StatefulWidget {
 class DashboardScreenState extends State<DashboardScreen> {
   int _currentIndex = 0;
 
-  late List<Widget> _screens;
+  late final List<Widget> _screens;
 
   @override
   void initState() {
     super.initState();
     _screens = [
-      HomeScreen(
-        onMealTap: (meal) {
-          // placeholder callback, replace with real logic later
-          debugPrint('Meal tapped: $meal');
-        }, username: '',
-      ),
+      const HomeScreen(),   
       const WeightAnalyticsScreen(),
       const GoalsScreen(),
       const ProfileScreen(),
@@ -38,11 +33,7 @@ class DashboardScreenState extends State<DashboardScreen> {
       body: _screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+        onTap: (index) => setState(() => _currentIndex = index),
         type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.white,
         selectedItemColor: Colors.blue,
@@ -51,26 +42,10 @@ class DashboardScreenState extends State<DashboardScreen> {
         showUnselectedLabels: true,
         elevation: 8,
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            activeIcon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.analytics),
-            activeIcon: Icon(Icons.analytics),
-            label: 'Analytics',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.flag_outlined),
-            activeIcon: Icon(Icons.flag),
-            label: 'Goals',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            activeIcon: Icon(Icons.person),
-            label: 'Profile',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.analytics), label: 'Analytics'),
+          BottomNavigationBarItem(icon: Icon(Icons.flag_outlined), label: 'Goals'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
       ),
     );

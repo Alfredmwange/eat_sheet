@@ -55,13 +55,7 @@ class MyApp extends StatelessWidget {
               '/login': (context) => const Login(),
               '/register': (context) => const Register(),
               '/dashboard': (context) => const DashboardScreen(),
-              '/home': (context) => HomeScreen(
-                onMealTap: (meal) {
-                  // handle meal tap, e.g. navigate to meal detail or logging
-                  // TODO: replace with real implementation
-                  debugPrint('Tapped on meal: $meal');
-                }, username: '',
-              ),
+              '/home': (context) => const HomeScreen(),
               '/analytics': (context) => const WeightAnalyticsScreen(),
               '/goals': (context) => const GoalsScreen(),
               '/profile': (context) => const ProfileScreen(),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:eat_sheet/models/user_model.dart';
 import 'package:eat_sheet/providers/user_provider.dart';
+import 'package:eat_sheet/helpers/nutrition_helper.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final User user;
@@ -62,15 +63,33 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     setState(() => _isLoading = true);
 
     try {
+      final age    = int.parse(_ageController.text);
+      final weight = double.parse(_weightController.text);
+      final height = double.parse(_heightController.text);
+
+      final calories = NutritionHelper.dailyCalorieGoal(
+        weightKg: weight, heightCm: height, age: age,
+        gender: _selectedGender, activityLevel: _selectedActivityLevel,
+        goal: _selectedGoal,
+      );
+      final macros = NutritionHelper.macroGoals(calories);
+      final updatedDietaryGoals = {
+        'calories': calories.toDouble(),
+        'protein':  macros['protein']!.toDouble(),
+        'carbs':    macros['carbs']!.toDouble(),
+        'fat':      macros['fat']!.toDouble(),
+      };
+
       final updatedUser = widget.user.copyWith(
         name: _nameController.text.trim(),
         email: _emailController.text.trim(),
-        age: int.parse(_ageController.text),
-        weight: double.parse(_weightController.text),
-        height: double.parse(_heightController.text),
+        age: age,
+        weight: weight,
+        height: height,
         gender: _selectedGender,
         goal: _selectedGoal,
         activityLevel: _selectedActivityLevel,
+        dietaryGoals: updatedDietaryGoals,
         updatedAt: DateTime.now(),
       );
 

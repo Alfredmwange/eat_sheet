@@ -40,6 +40,9 @@ dependencies:
   provider: ^6.1.5+1
   firebase_core: 4.4.0
   fl_chart: ^0.66.1
+  http: ^1.6.0
+  image_picker: ^1.1.2
+  permission_handler: ^11.3.1
 
 dev_dependencies:
   flutter_test:
