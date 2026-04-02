@@ -1,6 +1,6 @@
 # Eat Sheet
 
-A Flutter application for managing and sharing meal planning and grocery lists.
+A Flutter application for calorie tracking, weight tracking and diet analysis.
 
 ## Project Structure
 
