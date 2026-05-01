@@ -1,0 +1,9 @@
+// lib/config/app_config.dart.example
+//
+// Copy this file to app_config.dart and fill in your real keys.
+// NEVER commit app_config.dart to git — only commit this .example file.
+
+class AppConfig {
+  static const String rapidApiKey        = 'YOUR_RAPIDAPI_KEY_HERE';
+  static const String spoonacularApiKey  = 'YOUR_SPOONACULAR_API_KEY_HERE';
+}

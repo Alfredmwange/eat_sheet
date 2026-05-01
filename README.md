@@ -32,7 +32,7 @@ test/                          # Unit and widget tests
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone Alfredmwange/eat_sheet
 cd eat_sheet
 ```
 
@@ -41,7 +41,17 @@ cd eat_sheet
 flutter pub get
 ```
 
-3. Run the app:
+3. **Configure API Keys:**
+   - Copy `lib/config/app_config.dart.example` to `lib/config/app_config.dart`:
+   ```bash
+   cp lib/config/app_config.dart.example lib/config/app_config.dart
+   ```
+   - Open `lib/config/app_config.dart` and fill in your API keys:
+     - **RapidAPI Key**: Get from [Edamam Food & Grocery Database](https://rapidapi.com/edamam/api/edamam-food-and-grocery-database)
+     - **Spoonacular API Key**: Get from [Spoonacular API](https://spoonacular.com/food-api)
+   - **⚠️ Important**: Do not commit `app_config.dart` to version control. It's added to `.gitignore` to protect your API keys.
+
+4. Run the app:
 ```bash
 flutter run
 ```
@@ -49,7 +59,7 @@ flutter run
 ## Features
 
 - Meal planning interface
-- Grocery list management
+
 
 
 ## Development

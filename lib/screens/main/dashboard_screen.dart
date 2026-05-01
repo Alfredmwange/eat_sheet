@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fb;
+import 'package:eat_sheet/providers/user_provider.dart';
 import 'home_screen.dart';
 import 'analytics_screen.dart';
 import 'goals_screen.dart';
@@ -20,11 +23,25 @@ class DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
     _screens = [
-      const HomeScreen(),   
+      const HomeScreen(),
       const WeightAnalyticsScreen(),
       const GoalsScreen(),
       const ProfileScreen(),
     ];
+    // Load user data after the widget is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _ensureUserDataLoaded();
+    });
+  }
+
+  Future<void> _ensureUserDataLoaded() async {
+    final currentUser = fb.FirebaseAuth.instance.currentUser;
+    final userProvider = context.read<UserProvider>();
+
+    // Always load user data if user is authenticated
+    if (currentUser != null) {
+      await userProvider.loadUserData(currentUser.uid);
+    }
   }
 
   @override
@@ -43,8 +60,14 @@ class DashboardScreenState extends State<DashboardScreen> {
         elevation: 8,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.analytics), label: 'Analytics'),
-          BottomNavigationBarItem(icon: Icon(Icons.flag_outlined), label: 'Goals'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.analytics),
+            label: 'Analytics',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.flag_outlined),
+            label: 'Goals',
+          ),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
       ),

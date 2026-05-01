@@ -1,0 +1,32 @@
+[33mcommit f61337ee1e78376e70d7fcdc1f63e47fb0f14e77[m
+Author: Alfredmwange <alfredmwange02@gmail.com>
+Date:   Thu Apr 2 17:23:50 2026 +0300
+
+    API Integration, in-app notification & specifications
+
+ android/app/build.gradle.kts                   |    5 [32m+[m
+ android/app/src/main/AndroidManifest.xml       |    8 [32m+[m[31m-[m
+ lib/main.dart                                  |   17 [32m+[m[31m-[m
+ lib/models/user_model.dart                     |   96 [32m++[m
+ lib/providers/theme_provider.dart              |  200 [32m++++[m[31m-[m
+ lib/providers/user_provider.dart               |   19 [32m+[m[31m-[m
+ lib/screens/auth/login.dart                    |  376 [32m++++[m[31m----[m
+ lib/screens/auth/register.dart                 |  358 [32m++++[m[31m----[m
+ lib/screens/main/add_meal.dart                 | 1137 [32m++++++++++++++[m[31m----------[m
+ lib/screens/main/analytics_screen.dart         |  460 [32m+++++[m[31m-----[m
+ lib/screens/main/goals_screen.dart             |  834 [32m++++++++++[m[31m-------[m
+ lib/screens/main/home_screen.dart              |  324 [32m++++[m[31m---[m
+ lib/screens/main/profile_screen.dart           |  955 [32m++++++++++++++++++[m[31m--[m
+ lib/screens/onboarding/onboarding_screen.dart  |   35 [32m+[m[31m-[m
+ lib/services/auth.dart                         |    7 [32m+[m[31m-[m
+ lib/services/database.dart                     |   37 [32m+[m[31m-[m
+ lib/services/food_service.dart                 |  524 [32m++++++++[m[31m---[m
+ lib/services/notification_service.dart         |  430 [32m+++++++++[m
+ linux/flutter/generated_plugin_registrant.cc   |    4 [32m+[m
+ linux/flutter/generated_plugins.cmake          |    1 [32m+[m
+ macos/Flutter/GeneratedPluginRegistrant.swift  |    4 [32m+[m
+ pubspec.lock                                   |  168 [32m++++[m
+ pubspec.yaml                                   |    4 [32m+[m
+ windows/flutter/generated_plugin_registrant.cc |    3 [32m+[m
+ windows/flutter/generated_plugins.cmake        |    1 [32m+[m
+ 25 files changed, 4286 insertions(+), 1721 deletions(-)

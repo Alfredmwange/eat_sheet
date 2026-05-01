@@ -1,5 +1,8 @@
 import 'package:eat_sheet/helpers/shared_preferences_helper.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:eat_sheet/providers/user_provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -8,7 +11,8 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>
+    with TickerProviderStateMixin {
   late AnimationController _logoController;
   late AnimationController _textController;
   late Animation<double> _logoAnimation;
@@ -48,17 +52,22 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
 
   Future<void> _navigateToNextScreen() async {
     await Future.delayed(const Duration(seconds: 3));
-
     if (!mounted) return;
 
     final isFirstTime = await SharedPreferencesHelper.isFirstTime();
+    final currentUser = FirebaseAuth.instance.currentUser;
 
-    if (mounted) {
-      if (isFirstTime) {
-        Navigator.of(context).pushReplacementNamed('/onboarding');
-      } else {
-        Navigator.of(context).pushReplacementNamed('/login');
+    if (!mounted) return;
+    if (isFirstTime) {
+      Navigator.of(context).pushReplacementNamed('/onboarding');
+    } else if (currentUser != null) {
+      // User is already signed in — load user data and go to dashboard
+      await context.read<UserProvider>().loadUserData(currentUser.uid);
+      if (mounted) {
+        Navigator.of(context).pushReplacementNamed('/dashboard');
       }
+    } else {
+      Navigator.of(context).pushReplacementNamed('/login');
     }
   }
 
